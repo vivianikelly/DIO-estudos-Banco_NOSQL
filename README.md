@@ -71,10 +71,60 @@ O banco Cassandra é um exemplo de banco colunar.
 - **Keyspace:** agrupamento de famílias de colunas => database.
 - **Column Family/table:** agrupamento de colunas => table.
 - **Row key:** chave que repesenta uma linha de coluna => PK.
-- **Column:** representa um valor contendo: Name, Value Timestamp.
+- **Column:** representa um valor contendo: Name, Value, Timestamp.
 
 A busca é realizada pelas chaves.
 
-### Chave-valor
+### Chave-valor (key-value)
+
+Armazena um conjunto de dados, identificados por um ID exclusivo.
+
+- Nom desempenho em APP na nuvem.
+- Busca limitada, devido a busca ser pela chave.
+
+Usados em cache, sessão de usuário, carrinhos de compra. O Redis é um exemplo de banco chave-valor.
+
+Redis é altamente versátil e rápido, sendo ideal para caching, filas e manipulação de dados em tempo real.
 
 ### Documento
+
+- Dados e documentos autocontidos e auto descritivos. 
+- Permite redundância e incosistência.
+- Livre de esquemas, o qual pode usar json, xml, etc.
+
+Um exemplo de banco baseado em Documento é o MongoDB.
+
+# MongoDB
+
+## Introdução
+
+- Código aberto
+- Alta performance
+- Schema-free
+- Utiliza json para armazenamento dos dados (BSON)
+- Suporta índices
+- Escala horizontal
+- GridFS - armazenamento e recuperação de arquivos que excedem o limite de tamanho do documento BSON de 16 MB.
+
+### Estruturação
+
+- Document ==> Tupla/Registro
+- Collection ==> Tabela
+- Embedding/linking ==> Join
+
+#### Quando usar
+
+- Grande volume de dados (usar índices).
+- Dados não precisam ser estruturados.
+
+#### Quando não usar
+
+- Necessidade de relacionamentos/joins.
+- Precisa ACID e transações.
+
+
+
+
+
+
+
