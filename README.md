@@ -122,6 +122,138 @@ Um exemplo de banco baseado em Documento é o MongoDB.
 - Necessidade de relacionamentos/joins.
 - Precisa ACID e transações.
 
+## Schema Design
+
+### Embedding (Documento autocontido)
+
+- Pros:
+    - Consulta informações numa única query.
+    - Atualiza o registro numa única operação.
+
+- Contras:
+    - Limite de 16MB por documento.
+
+### Referência
+
+- Pros:
+    - Documentos pequenos.
+    - Sem duplicação.
+    - Usado quando os dados não são acessados em todas as consultas.
+
+- Contras:
+    - Duas ou mais querys ou a uso do $lookup.
+
+#### Recomendações de acordo com os relacionamentos:
+
+- One-to-one: prefira atributos chave-valor no documento.
+
+- One-to-few: prefira embedding.
+
+- One-to-many e many-to-many: prefira referência.
+
+### Boas práticas
+
+- Evite documentos muito grandes;
+- Use nome campos objetivos/curtos (ocupa espaço);
+- Análise de querys usando explain();
+- Atualize apenas os campos a ser alterados (não do json completo);
+- Evitar negaçõe sem querys;
+- Lista/arrays dentor de documentos não podem crescer sem limite.
+
+### JSON vc BSON
+---
+
+**BSON:** 
+- É uma serialização condificada em binário de documentos semelhantes ao JSON;
+- Posssui tipos de dados como Date, ObjectID, diferente do JSON, o qual não possui especificações de tipos de dados.
+
+## Manipulação de dados
+
+- Lista BD: *show databases*
+- Cria BD: *use <nm_database>*
+- Criação coleção: 
+    - *db.createCollection("test", {copped: true, max:2 size: 2});*
+- Inserir dados na coleção:
+    - *db.test.insertOne({"nome": "Teste 1"})*
+- Listar alteração: *db.test.find({});*
+
+Desta forma, se incluir terceiro registro, o primeiro será excluído (max:2).
+
+Comandos: 
+- db.nomeDaColecao.save usado para inserir ou alteração.
+- db.nomeDaColecao.updateOne é o mais indicado para efetuar alteração.
+- db.nomeDaColecao.updateMany é usado para mais campos.
+
+## Performance e índices
+
+Os índices são estruturas de dados que melhoram a eficiência das operações de leitura, permitindo que as consultas localizem rapidamente os documentos numa coleção, sem precisar examinar todos os documentos (COLLSCAN).
+
+Exemplos:
+
+db.colecao.createIndex({ campo: 1 }) // Ordem crescente
+db.colecao.createIndex({ campo: -1 }) // Ordem decrescente
+
+Examinando Consultas:
+---
+
+O comando explain() exibe detalhes sobre como o MongoDB processa uma consulta.
+
+*db.colecao.find({ campo: "valor" }).explain("executionStats")*
+
+## Agregações
+
+São usadas para processar dados e retornar resultados computados. 
+
+- Count
+- distinct
+
+Operadores:
+
+- $group – Agrupar e Resumir
+
+*db.vendas.aggregate([
+  { $group: { _id: "$categoria", total: { $sum: "$quantidade" } } }
+])*
+
+- $addFields – Adicionar Campos
+
+
+*db.usuarios.aggregate([
+  { $addFields: { idadeEmDias: { $multiply: ["$idade", 365] } } }
+])*
+
+Funções:
+
+- $sum: Soma valores.
+- $avg: Calcula a média (campos number).
+- $min: Retorna o menor valor.
+- $max: Retorna o maior valor.
+
+Operadores lógicos:
+
+*db.nomeDaColecao.find({ $and: [{ campo1: "valor1" }, { campo2: "valor2" }] }):*<bt>
+
+*db.nomeDaColecao.find({ $or: [{ campo1: "valor1" }, { campo2: "valor2" }] })*]]
+
+Operadores de comparação:
+
+- db.nomeDaColecao.find({ campo: { $gt: valor } }) // Maior que
+
+- db.nomeDaColecao.find({ campo: { $lt: valor } }) // Menor que
+
+- db.nomeDaColecao.find({ campo: { $gte: valor } }) // Maior ou igual
+
+- db.nomeDaColecao.find({ campo: { $lte: valor } }) // Menor ou igual
+
+- db.nomeDaColecao.find({ campo: { $ne: valor } }) // Diferente
+db.nomeDaColecao.find({ campo: { $in: [valor1, valor2] } }) // Contido
+
+- db.nomeDaColecao.find({ campo: { $nin: [valor1, valor2] } }) // Não Contido*
+
+
+
+
+
 
 
 
